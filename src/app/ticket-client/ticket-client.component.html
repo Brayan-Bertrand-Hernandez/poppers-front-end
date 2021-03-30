@@ -1,0 +1,62 @@
+<app-header></app-header>
+
+<div class="container my-4" *ngIf="client?.tickets">
+    <ticket-detail-modal *ngIf="selectedTicket" [ticket]="selectedTicket"></ticket-detail-modal>
+
+    <div class="card border-primary mb-4 text-center">
+        <div class="card-header">Facturas del cliente {{ client.name | lowercase }}</div>
+        <div class="card-body text-primary">
+            <h5 class="card-title">Listado de factura</h5>
+
+            <div class="container">
+                <div class="my-2 text-left" *ngIf="client?.id">
+                    <button class="btn btn-rounded btn-primary" type="button" [routerLink]="['/tickets/form/', client.id]">Crear factura</button>&nbsp;&nbsp;
+                    <a class="btn btn-rounded btn-success" type="button" href="{{ url }}/api/tickets/pdf-per-id/{{ client.id }}">Descargar facturas</a>
+                </div>
+
+                <div class="alert alert-info my-4" *ngIf="client.tickets.length == 0">
+                    No hay facturas asignadas para el cliente {{ client.name }}.
+                </div>
+
+                <table class="table table-bordered table-striped my-4" *ngIf="client.tickets.length > 0">
+                    <thead>
+                        <tr>
+                            <th>Folio</th>
+                            <th>Descripción</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Pago</th>
+                            <th>Revisado</th>
+                            <th>Factura</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let ticket of client.tickets">
+                            <td>{{ ticket.id }}</td>
+                            <td>{{ ticket.description }}</td>
+                            <td>{{ ticket.date | date:"EEEE dd, MMMM yyyy" }}</td>
+                            <td>{{ ticket.total }}</td>
+                            <td>
+                                <img (click)="openModal(ticket)" src="{{ url }}/api/uploads/ticket/{{ ticket.pdf }}" alt="{{ ticket.pdf }}" class="img-thumbnail rounded" *ngIf="ticket?.pdf" style="width: 64px; cursor: pointer;" />
+                                <img (click)="openModal(ticket)" src="../assets/image/products/palomitas-de-maiz.svg" alt="withoutPhoto" class="img-thubnail rounded" *ngIf="!ticket?.pdf" style="width: 64px; cursor: pointer;" />
+                            </td>
+                            <td>
+                                <button class="btn btn-info btn-sm" type="button" (click)="check(ticket)" *ngIf="ticket.checked">Pagado</button>
+                                <button class="btn btn-info btn-sm" type="button" (click)="check(ticket)" *ngIf="!ticket.checked">En revisión</button>
+                            </td>
+                            <td><button class="btn btn-primary btn-sm" type="button" [routerLink]="['/tickets', ticket.id]">Ver</button></td>
+                            <td><button class="btn btn-danger btn-sm" type="button" (click)="deleteTicket(ticket)">Eliminar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="container ">
+                    <button class="btn btn-outline-secondary col-md-4" [routerLink]="['/clients']">Volver</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>

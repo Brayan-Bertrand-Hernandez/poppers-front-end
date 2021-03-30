@@ -1,0 +1,64 @@
+<app-header></app-header>
+
+<div class="container my-4">
+    <client-detail-modal *ngIf="selectedClient" [client]="selectedClient"></client-detail-modal>
+
+    <div class="card border-primary mb-4 text-center">
+        <div class="card-header">Clientes</div>
+        <div class="card-body text-primary">
+            <h5 class="card-title">Listado de clientes</h5>
+
+            <div class="container">
+                <div class="my-2 text-left">
+                    <button *ngIf="authService.hasRole('ROLE_ADMIN')" class="btn btn-rounded btn-primary" type="button" [routerLink]="['/clients/form']">Crear cliente</button>&nbsp;&nbsp;
+                    <a *ngIf="authService.hasRole('ROLE_ADMIN')" class="btn btn-rounded btn-success" type="button" href="{{ url }}/api/tickets/pdf">Descargar facturas</a>
+                </div>
+
+                <div *ngIf="clients.length == 0" class="alert alert-info">
+                    No hay registros en la base de datos!
+                </div>
+
+                <table class="table table-bordered table-striped" *ngIf="clients.length > 0">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nombre</th>
+                            <th>Dirrección</th>
+                            <th>País</th>
+                            <th>Teléfono celular</th>
+                            <th>Fecha de creación</th>
+                            <th>Email</th>
+                            <th>Crear factura</th>
+                            <th *ngIf="authService.hasRole('ROLE_ADMIN')">Editar</th>
+                            <th *ngIf="authService.hasRole('ROLE_ADMIN')">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let client of clients">
+                            <td>
+                                <img (click)="openModal(client)" src="{{ url }}/api/uploads/img/{{ client.photo }}" alt="{{ client.photo }}" class="img-thumbnail rounded" *ngIf="client?.photo" style="width: 64px; cursor: pointer;" />
+                                <img (click)="openModal(client)" src="../assets/image/user-template-2.png" alt="withoutPhoto" class="img-thubnail rounded" *ngIf="!client?.photo" style="width: 64px; cursor: pointer;" />
+                            </td>
+                            <td>{{ client.name | uppercase }}</td>
+                            <td>{{ client.country.name }}</td>
+                            <td>{{ client.address }}</td>
+                            <td>{{ client.cellphone }}</td>
+                            <td>{{ client.date | date:"EEEE dd, MMMM yyyy" }}</td>
+                            <td>{{ client.email }}</td>
+                            <td><button type="button" class="btn btn-success btn-sm" [routerLink]="['/tickets/form/', client.id]">Crear</button></td>
+                            <td *ngIf="authService.hasRole('ROLE_ADMIN')">
+                                <button class="btn btn-primary btn-sm" type="button" name="editar" [routerLink]="['/clients/form/', client.id]">Editar</button>
+                            </td>
+                            <td *ngIf="authService.hasRole('ROLE_ADMIN')">
+                                <button class="btn btn-danger btn-sm" type="button" name="eliminar" (click)='delete(client)'>Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <paginator-nav *ngIf="paginator" [paginator]="paginator"></paginator-nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>

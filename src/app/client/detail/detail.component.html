@@ -1,0 +1,61 @@
+<div *ngIf="modalService.modal" class="open-modal animation fadeIn">
+    <div class="modal" tabindex="-1" style="display: block;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalles del cliente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()"> 
+                <span aria-hidden="true">&times;</span>
+              </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <ul class="list-group mb-3" *ngIf="client">
+                                    <li class="list-group-item active">{{ client.name }}</li>
+                                    <li class="list-group-item">{{ client.country.name }}</li>
+                                    <li class="list-group-item">{{ client.address }}</li>
+                                    <li class="list-group-item">{{ client.cellphone }}</li>
+                                    <li class="list-group-item">{{ client.date | date: 'fullDate' }}</li>
+                                    <li class="list-group-item">{{ client.email }}</li>
+                                </ul>
+
+                                <div class="input-group mb-3" *ngIf="authService.hasRole('ROLE_ADMIN')">
+                                    <div class="custom-file">
+                                        <input (change)="selectedPhoto($event)" type="file" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04">
+                                        <label class="custom-file-label" for="inputGroupFile04">Seleccionar foto</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button (click)="uploadPhoto()" [disabled]="!selectPhoto" class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Subir</button>
+                                    </div>
+                                </div>
+                                <div class="progress" style="height: 30px;" *ngIf="progress > 0">
+                                    <div class="progress-bar progress-bar-striped" role="progressbar" [ngStyle]="{width: progress + '%'}" attr.aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">{{ progress }}%</div>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <img src="{{url}}/api/uploads/img/{{client.photo}}" alt="{{ client.photo }}" class="img-thumbnail rounded" *ngIf="client?.photo" />
+                            </div>
+                        </div>
+
+                        <div class="row" *ngIf="client.tickets.length > 0">
+                            <button type="button" class="btn btn-primary btn-sm" [routerLink]="['/ticketClient', client.id]">Facturas</button>&nbsp;&nbsp;
+                            <a class="btn btn-rounded btn-success" type="button" href="{{url}}/api/tickets/pdf-per-id/{{ client.id }}">Descargar facturas</a>
+                        </div>
+                        <div class="row">
+                            <div class="alert alert-info my-4" *ngIf="client.tickets.length == 0 && client.role.name == 'ROLE_CLIENT'">
+                                No hay facturas asignadas para el cliente {{ client.name }}.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

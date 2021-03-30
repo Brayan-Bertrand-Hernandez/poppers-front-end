@@ -1,0 +1,109 @@
+<section>
+    <div class="imgBx">
+        <img src="../assets/image/login/register.svg" alt="register">
+    </div>
+    <div class="contentBx">
+        <div class="formBx">
+            <h2>Registrar cuenta</h2>
+
+            <form #clientSignForm="ngForm">
+                <div class="inputBx">
+                    <span>Username</span>
+                    <input type="text" placeholder="Nombre de usuario" [(ngModel)]="user.username" name="username" required pattern="^[A-Z][a-zA-Z]{3,}(?: [A-Z][a-zA-Z]*){0,2}$" #username="ngModel" />
+                    <div class="alert alert-danger" *ngIf="username.invalid && (username.dirty || username.touched)">
+                        <div *ngIf="username.errors.required">
+                            Username es requerido
+                        </div>
+                        <div *ngIf="username.errors.pattern">
+                            Username no es válido
+                        </div>
+                    </div>
+                </div>
+                <div class="inputBx">
+                    <span>Nombre</span>
+                    <input type="text" placeholder="Nombre completo" [(ngModel)]="user.name" name="name" required pattern="^[A-Z][a-zA-Z]{3,}(?: [A-Z][a-zA-Z]*){0,2}$" #name="ngModel" />
+                    <div class="alert alert-danger" *ngIf="name.invalid && (name.dirty || name.touched)">
+                        <div *ngIf="name.errors.required">
+                            Nombre es requerido
+                        </div>
+                        <div *ngIf="name.errors.pattern">
+                            Nombre no es válido
+                        </div>
+                    </div>
+                </div>
+                <div class="inputBx">
+                    <span>Dirrección</span>
+                    <input type="text" placeholder="Dirrección" [(ngModel)]="user.address" name="address" required #address="ngModel" />
+                    <div class="alert alert-danger" *ngIf="address.invalid && (address.dirty || address.touched)">
+                        <div *ngIf="address.errors.required">
+                            Dirreción es requerida
+                        </div>
+                    </div>
+                </div>
+                <div class="inputBx">
+                    <span>Teléfono</span>
+                    <input type="text" placeholder="Teléfono celular" [(ngModel)]="user.cellphone" name="cellphone" required minlength="10" maxlength="10" pattern="^[0-9]*$" #cellphone="ngModel" />
+                    <div class="alert alert-danger" *ngIf="cellphone.invalid && (cellphone.dirty || cellphone.touched)">
+                        <div *ngIf="cellphone.errors.required">
+                            Teléfono es requerido
+                        </div>
+                        <div *ngIf="cellphone.errors.minlength || cellphone.errors.maxlength">
+                            Teléfono debe tener 10 números
+                        </div>
+                        <div *ngIf="cellphone.errors.pattern">
+                            Teléfono debe ser compuesto por números
+                        </div>
+                    </div>
+                </div>
+                <div class="inputBx">
+                    <span>Email</span>
+                    <input type="text" placeholder="Dirreción de correo" [(ngModel)]="user.email" name="email" required email #email="ngModel" />
+                    <div class="alert alert-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+                        <div *ngIf="email.errors.required">
+                            Email es requerido
+                        </div>
+                        <div *ngIf="email.errors.email">
+                            Email debe tener un formato válido.
+                        </div>
+                    </div>
+                </div>
+                <div class="inputBx">
+                    <span>País</span>
+                    <select [(ngModel)]="user.country" name="country" required #country="ngModel">
+                        <option [ngValue]="undefined">--- Seleccionar un país ---</option>
+                        <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="country.invalid && (country.dirty || country.touched)">
+                        <div *ngIf="country.errors.required">
+                            País es requerido
+                        </div>
+                    </div>
+                </div>
+                <div class="inputBx">
+                    <span>Contraseña</span>
+                    <input type="password" placeholder="**********" [(ngModel)]="user.password" name="password" required #password="ngModel" />
+                    <div class="alert alert-danger" *ngIf="password.invalid && (password.dirty || password.touched)">
+                        <div *ngIf="password.errors.required">
+                            Contraseña es requerida
+                        </div>
+                        <div *ngIf="password.errors.maxlength">
+                            Contraseña no debe tener más de 8 caracteres
+                        </div>
+                    </div>
+                </div>
+                <div class="inputBx">
+                    <input type="submit" value="Sign up" role="button" (click)='create()' [disabled]="!clientSignForm.form.valid" />
+                </div>
+                <div class="inputBx">
+                    <p>Ya tengo una cuenta <a routerLink="/login">Entra aquí</a></p>
+                </div>
+
+                <h3>Otras opciones de login</h3>
+                <ul class="sci">
+                    <li><img src="../assets/image/login/logo-facebook.png" alt="" (click)="signInWithFB()" /></li>
+                    <li><img src="../assets/image/login/logo-google.png" alt="" (click)="signInWithGoogle()" /></li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</section>

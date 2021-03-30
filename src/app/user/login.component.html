@@ -1,0 +1,36 @@
+<section>
+    <div class="imgBx">
+        <img src="../assets/image/login/log.svg" alt="">
+    </div>
+    <div class="contentBx">
+        <div class="formBx">
+            <h2>Login</h2>
+
+            <form>
+                <div class="inputBx">
+                    <span>Username</span>
+                    <input [(ngModel)]="user.username" type="text" name="username" placeholder="Nombre de usuario" required autofocus />
+                </div>
+                <div class="inputBx">
+                    <span>Password</span>
+                    <input [(ngModel)]="user.password" type="password" name="password" placeholder="**********" required />
+                </div>
+                <div class="inputBx">
+                    <input (click)="login()" type="submit" value="Sign in" name="signin" />
+                </div>
+                <div class="inputBx">
+                    <p>¿Aún no tienes cuenta? <a routerLink="/signup">Registrate aquí</a></p>
+                </div>
+                <div class="inputBx">
+                    <p>¿No recuerdas tu contraseña usuario? <a routerLink="/recover">Recuperar</a></p>
+                </div>
+            </form>
+
+            <h3>Otras opciones de login</h3>
+            <ul class="sci">
+                <li><img src="../assets/image/login/logo-facebook.png" alt="" (click)="signInWithFB()" /></li>
+                <li><img src="../assets/image/login/logo-google.png" alt="" (click)="signInWithGoogle()" /></li>
+            </ul>
+        </div>
+    </div>
+</section>

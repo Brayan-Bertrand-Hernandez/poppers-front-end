@@ -1,0 +1,55 @@
+<section>
+    <div class="imgBx">
+        <img src="../../assets/image/login/log.svg" alt="">
+    </div>
+    <div class="contentBx">
+        <div class="formBx">
+            <h2>Recuperar cuenta</h2>
+
+            <form #recoverForm="ngForm">
+                <div class="inputBx">
+                    <span>Nombre</span>
+                    <input [(ngModel)]="user.name" type="text" name="name" placeholder="Nombre" required autofocus pattern="^[A-Z][a-zA-Z]{3,}(?: [A-Z][a-zA-Z]*){0,2}$" #name="ngModel" />
+                    <div class="alert alert-danger" *ngIf="name.invalid && (name.dirty || name.touched)">
+                        <div *ngIf="name.errors.required">
+                            Nombre es requerido
+                        </div>
+                        <div *ngIf="name.errors.pattern">
+                            Nombre no es válido
+                        </div>
+                    </div>
+                </div>
+                <div class="inputBx">
+                    <span>Email</span>
+                    <input [(ngModel)]="user.email" type="email" name="email" placeholder="Correo electrónico" required email #email="ngModel" />
+                    <div class="alert alert-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+                        <div *ngIf="email.errors.required">
+                            Email es requerido
+                        </div>
+                        <div *ngIf="email.errors.email">
+                            Email debe tener un formato válido.
+                        </div>
+                    </div>
+                </div>
+                <div class="inputBx">
+                    <span>Password</span>
+                    <input [(ngModel)]="user.password" type="password" name="password" placeholder="**********" maxlength="8" #password="ngModel" />
+                    <div class="alert alert-danger" *ngIf="password.invalid && (password.dirty || password.touched)">
+                        <div *ngIf="password.errors.maxlength">
+                            Contraseña debe tener al menos 8 caracteres
+                        </div>
+                    </div>
+                </div>
+                <div class="inputBx">
+                    <input type="submit" value="Recuperar" name="recover" (click)="recover()" [disabled]="!recoverForm.form.valid" />
+                </div>
+                <div class="inputBx">
+                    <p>¿Aún no tienes cuenta? <a routerLink="/signup">Registrate aquí</a></p>
+                </div>
+                <div class="inputBx">
+                    <p>Ya tengo una cuenta <a routerLink="/login">Entra aquí</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

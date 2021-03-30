@@ -1,0 +1,15 @@
+<app-header></app-header>
+
+<div class="container my-3">
+    <button type="button" (click)="setEnabled()" class="btn btn-primary my-3">{{ enabled == true ? 'Ocultar' : 'Mostrar'}}</button>
+    <div class="card border-primary">
+        <div class="card-header">
+            Miembros del proyecto
+        </div>
+        <ul class="list-group" *ngIf="enabled == true">
+            <li class="list-group-item" *ngFor="let miembro of membersList">{{ miembro }}</li>
+        </ul>
+    </div>
+</div>
+
+<app-footer></app-footer>

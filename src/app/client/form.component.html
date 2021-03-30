@@ -1,0 +1,246 @@
+<app-header></app-header>
+
+<div class="container my-3">
+    <div class="card border-primary bg-light text-dark text-center" *ngIf="!client?.id  else elseBody">
+        <div class="card-header">Crear cliente</div>
+        <div class="card-body">
+            <form #clientForm="ngForm">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2" for="name">Username</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" [(ngModel)]="client.username" name="username" required pattern="^[A-Z][a-zA-Z]{3,}(?: [A-Z][a-zA-Z]*){0,2}$" #username="ngModel" />
+                        <div class="alert alert-danger" *ngIf="username.invalid && (username.dirty || username.touched)">
+                            <div *ngIf="username.errors.required">
+                                Username es requerido
+                            </div>
+                            <div *ngIf="username.errors.pattern">
+                                Username no es válido
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2" for="name">Nombre</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" [(ngModel)]="client.name" name="name" required pattern="^[A-Z][a-zA-Z]{3,}(?: [A-Z][a-zA-Z]*){0,2}$" #name="ngModel" />
+                        <div class="alert alert-danger" *ngIf="name.invalid && (name.dirty || name.touched)">
+                            <div *ngIf="name.errors.required">
+                                Nombre es requerido
+                            </div>
+                            <div *ngIf="name.errors.pattern">
+                                Nombre no es válido
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2" for="address">Dirrección</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" [(ngModel)]="client.address" name="address" required #address="ngModel" />
+                        <div class="alert alert-danger" *ngIf="address.invalid && (address.dirty || address.touched)">
+                            <div *ngIf="address.errors.required">
+                                Dirreción es requerida
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2" for="cellphone">Teléfono celular</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" [(ngModel)]="client.cellphone" name="cellphone" required minlength="10" maxlength="10" pattern="^[0-9]*$" #cellphone="ngModel" />
+                        <div class="alert alert-danger" *ngIf="cellphone.invalid && (cellphone.dirty || cellphone.touched)">
+                            <div *ngIf="cellphone.errors.required">
+                                Teléfono es requerido
+                            </div>
+                            <div *ngIf="cellphone.errors.minlength && cellphone.errors.maxlength">
+                                Teléfono debe tener 10 números
+                            </div>
+                            <div *ngIf="cellphone.errors.pattern">
+                                Teléfono debe ser compuesto por números
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2" for="email">Email</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" [(ngModel)]="client.email" name="email" required email #email="ngModel" />
+                        <div class="alert alert-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+                            <div *ngIf="email.errors.required">
+                                Email es requerido
+                            </div>
+                            <div *ngIf="email.errors.email">
+                                Email debe tener un formato válido.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2" for="country">País</label>
+                    <div class="col-sm-6">
+                        <select [compareWith]="compareCountry" class="form-control" style="width: 500px;" [(ngModel)]="client.country" name="country" required #country="ngModel">
+                            <option [ngValue]="undefined">--- Seleccionar un país ---</option>
+                            <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
+                        </select>
+                        <div class="alert alert-danger" *ngIf="country.invalid && (country.dirty || country.touched)">
+                            <div *ngIf="country.errors.required">
+                                País es requerido
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2" for="country">Role</label>
+                    <div class="col-sm-6">
+                        <select [compareWith]="compareRole" [(ngModel)]="client.role" class="form-control" style="width: 500px;" name="role" required #role="ngModel">
+                            <option [ngValue]="undefined" value="0">--- Seleccionar un role ---</option>
+                            <option *ngFor="let role of roles" [ngValue]="role">{{ role.name }}</option>
+                        </select>
+                        <div class="alert alert-danger" *ngIf="role.invalid && (role.dirty || role.touched)">
+                            <div *ngIf="role.errors.required">
+                                Role es requerido
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2" for="email">Contraseña</label>
+                    <div class="col-sm-6">
+                        <input type="password" class="form-control" [(ngModel)]="client.password" name="password" required maxlength="8" #password="ngModel" />
+                        <div class="alert alert-danger" *ngIf="password.invalid && (password.dirty || password.touched)">
+                            <div *ngIf="password.errors.required">
+                                Contraseña es requerida
+                            </div>
+                            <div *ngIf="password.errors.maxlength">
+                                Contraseña debe tener al menos 8 caracteres
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <button class="btn btn-primary btn-sm" role="button" (click)='create()' [disabled]="!clientForm.form.valid">Crear</button>
+                        <button class="btn btn-danger btn-sm" role="button" [routerLink]="['/clients']">Cancelar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <ng-template #elseBody>
+        <div class="card border-primary bg-light text-dark text-center">
+            <div class="card-header">Actualizar cliente</div>
+            <div class="card-body">
+                <form #clientForm="ngForm">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="name">Username</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" [(ngModel)]="client.username" name="username" required #username="ngModel" />
+                            <div class="alert alert-danger" *ngIf="username.invalid && (username.dirty || username.touched)">
+                                <div *ngIf="username.errors.required">
+                                    Username es requerido
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="name">Nombre</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" [(ngModel)]="client.name" name="name" required #name="ngModel" />
+                            <div class="alert alert-danger" *ngIf="name.invalid && (name.dirty || name.touched)">
+                                <div *ngIf="name.errors.required">
+                                    Nombre es requerido
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="address">Dirrección</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" [(ngModel)]="client.address" name="address" required #address="ngModel" />
+                            <div class="alert alert-danger" *ngIf="address.invalid && (address.dirty || address.touched)">
+                                <div *ngIf="address.errors.required">
+                                    Dirreción es requerida
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="cellphone">Teléfono celular</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" [(ngModel)]="client.cellphone" name="cellphone" required #cellphone="ngModel" />
+                            <div class="alert alert-danger" *ngIf="cellphone.invalid && (cellphone.dirty || cellphone.touched)">
+                                <div *ngIf="cellphone.errors.required">
+                                    Teléfono es requerido
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="email">Email</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" [(ngModel)]="client.email" name="email" required email #email="ngModel" />
+                            <div class="alert alert-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+                                <div *ngIf="email.errors.required">
+                                    Email es requerido
+                                </div>
+                                <div *ngIf="email.errors.email">
+                                    Email debe tener un formato válido.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="country">País</label>
+                        <div class="col-sm-6">
+                            <select [compareWith]="compareCountry" class="form-control" style="width: 500px;" [(ngModel)]="client.country" name="country" required #country="ngModel">
+                                <option [ngValue]="undefined">--- Seleccionar un país ---</option>
+                                <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
+                            </select>
+                            <div class="alert alert-danger" *ngIf="country.invalid && (country.dirty || country.touched)">
+                                <div *ngIf="country.errors.required">
+                                    País es requerido
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="country">Role</label>
+                        <div class="col-sm-6">
+                            <select [compareWith]="compareRole" [(ngModel)]="client.role" class="form-control" style="width: 500px;" name="role" required #role="ngModel">
+                                <option [ngValue]="undefined" value="0">--- Seleccionar un role ---</option>
+                                <option *ngFor="let role of roles" [ngValue]="role">{{ role.name }}</option>
+                            </select>
+                            <div class="alert alert-danger" *ngIf="role.invalid && (role.dirty || role.touched)">
+                                <div *ngIf="role.errors.required">
+                                    Role es requerido
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="email">Contraseña</label>
+                        <div class="col-sm-6">
+                            <input type="password" class="form-control" [(ngModel)]="client.password" name="password" required #password="ngModel" />
+                            <div class="alert alert-danger" *ngIf="password.invalid && (password.dirty || password.touched)">
+                                <div *ngIf="password.errors.required">
+                                    Contraseña es requerida
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <button class="btn btn-primary btn-sm" role="button" (click)='update()' [disabled]="!clientForm.form.valid">Editar</button>
+                            <button class="btn btn-danger btn-sm" role="button" [routerLink]="['/clients']">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </ng-template>
+</div>
+
+<app-footer></app-footer>

@@ -1,0 +1,56 @@
+<app-user-profile *ngIf="selectedClient && client?.id" [client]="selectedClient"></app-user-profile>
+
+<nav class="navbar navbar-expand-lg navbar navbar-dark" style="background-color: #DB4437;" *ngIf="client?.id">
+    <span class="navbar-brand mb-0 h1">Poppers</span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link" routerLink="/products">Carrito</a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link" routerLink="/invoice">Pedidos</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav navbar-center mr-auto">
+            <li class="nav-item">
+                <span class="nav-link mb-0 h5">{{ this.day }}</span>
+            </li>
+            <li class="nav-item">
+                <span class="nav-link mb-0 h5">{{ this.hour }}&nbsp;&nbsp;&nbsp;:</span>
+            </li>
+            <li class="nav-item">
+                <span class="nav-link mb-0 h5">{{ this.minute }}&nbsp;&nbsp;&nbsp;:</span>
+            </li>
+            <li class="nav-item">
+                <span class="nav-link mb-0 h5">{{ this.second }}</span>
+            </li>
+            <li class="nav-item">
+                <span class="nav-link mb-0 h5">{{ this.ampm }}</span>
+            </li>
+        </ul>
+
+        <img *ngIf="isLogged" src="{{ loggedUser.photoUrl }}" class="rounded-circle z-depth-0" style="width: 50px">
+        <img *ngIf="!isLogged && !client?.photo" src="../assets/image/user-template-2.png" class="rounded-circle z-depth-0" style="width: 50px">
+        <img *ngIf="!isLogged && client?.photo" src="{{url}}/api/uploads/img/{{client.photo}}" class="rounded-circle z-depth-0" style="width: 50px">
+
+        <form class="form-inline my-2 my-lg-0">
+            <ul class="navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a class="btn btn-light dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{ authService.user.name }}
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <button class="btn btn-link dropdown-item" type="button" (click)="openModal(client)" *ngIf="!isLogged && id != 0">Perfil</button>
+                        <button (click)="logout()" class="btn btn-link dropdown-item" type="submit">Logout</button>
+                    </div>
+                </li>
+            </ul>
+        </form>
+    </div>
+</nav>

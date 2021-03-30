@@ -1,0 +1,91 @@
+<app-header-clients></app-header-clients>
+
+<div class="container my-4" *ngIf="ticket.user?.id">
+    <form #ticketForm="ngForm">
+        <div class="pb-5">
+            <div class="container">
+                <div class="row py-5 p-4 bg-white rounded shadow-sm">
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+                                <div class="table-responsive">
+                                    <div class="alert alert-info my-4" *ngIf="ticket.items.length == 0">
+                                        No hay productos en tu carrito debe elegir al menos uno!
+                                    </div>
+
+                                    <table class="table" *ngIf="ticket.items.length > 0">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="border-0 bg-light">
+                                                    <div class="p-2 px-3 text-uppercase">Producto</div>
+                                                </th>
+                                                <th scope="col" class="border-0 bg-light">
+                                                    <div class="py-2 text-uppercase">Precio</div>
+                                                </th>
+                                                <th scope="col" class="border-0 bg-light">
+                                                    <div class="py-2 text-uppercase">Cantidad</div>
+                                                </th>
+                                                <th scope="col" class="border-0 bg-light">
+                                                    <div class="py-2 text-uppercase">Total</div>
+                                                </th>
+                                                <th scope="col" class="border-0 bg-light">
+                                                    <div class="py-2 text-uppercase">Borrar</div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of ticket.items">
+                                                <th scope="row" class="border-0">
+                                                    <div class="p-2">
+                                                        <div class="ml-3 d-inline-block align-middle">
+                                                            <h5 class="mb-0"> <a class="text-dark d-inline-block align-middle">{{ item.product.name }}</a></h5>
+                                                        </div>
+                                                    </div>
+                                                </th>
+                                                <td class="border-0 align-middle"><strong>${{ item.product.price }}</strong></td>
+                                                <td class="border-0 align-middle">
+                                                    <input type="number" value="{{ item.quantity }}" class="form-control col-sm-4" (change)="updateQuantity(item.product.id, $event)">
+                                                </td>
+                                                <td class="border-0 align-middle"><strong>${{ item.calculateAmount() }}</strong></td>
+                                                <td class="border-0 align-middle"><i class="fa fa-trash" (click)="deleteTicketItem(item.product.id)"></i></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Descripción del pedido</div>
+                        <div class="p-4">
+                            <input type="text" name="description" class="form-control" [(ngModel)]="ticket.description" required #description="ngModel">
+                            <div class="alert alert-danger" *ngIf="description.invalid && description.touched || description.invalid && ticketForm.submitted">
+                                La descripción es requerida.
+                            </div>
+                        </div>
+                        <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Comentarios del pedido</div>
+                        <div class="p-4">
+                            <textarea name="comment" class="font-italic mb-4" [(ngModel)]="ticket.comment">Observación</textarea>
+                            <ul class="list-unstyled mb-4">
+                                <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">${{ ticket.calculateGrantTotal() }}</strong>
+                                    <h5 class="font-weight-bold"></h5>
+                                </li>
+                            </ul><a class="btn btn-dark rounded-pill py-2 btn-block" (click)="create(ticketForm)">Pedir</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" placeholder="Añadir producto" aria-label="Product" matInput [formControl]="autocompleteControl" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="showName" (optionSelected)="selectProduct($event)">
+                                <mat-option *ngFor="let product of filteredProducts | async" [value]="product">
+                                    {{ product.name }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

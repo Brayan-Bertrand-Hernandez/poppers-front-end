@@ -1,0 +1,89 @@
+<app-header></app-header>
+
+<div class="container my-3">
+    <div class="card border-primary bg-light">
+        <div class="card-header">Factura: {{ ticket.description }}</div>
+        <div class="card-body">
+            <h4 class="card-title">
+                <a [routerLink]="['/clients']" class="btn btn-light btn-xs">&laquo; volver</a>
+            </h4>
+
+            <form #ticketForm="ngForm">
+                <div class="form-group row" *ngIf="ticket.user">
+                    <label for="client" class="col-sm-2 col-form-label">Cliente</label>
+
+                    <div class="col-sm-6">
+                        <input type="text" name="client" value="{{ ticket.user.name }}" class="form-control" disabled>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-sm-2 col-form-label">Descripción</label>
+
+                    <div class="col-sm-6">
+                        <input type="text" name="description" class="form-control" [(ngModel)]="ticket.description" required #description="ngModel">
+                        <div class="alert alert-danger" *ngIf="description.invalid && description.touched || description.invalid && ticketForm.submitted">
+                            La descripción es requerida.
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="comment" class="col-sm-2 col-form-label">Observación</label>
+
+                    <div class="col-sm-6">
+                        <textarea name="comment" class="form-control" [(ngModel)]="ticket.comment">Observación</textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" placeholder="Añadir producto" aria-label="Product" matInput [formControl]="autocompleteControl" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="showName" (optionSelected)="selectProduct($event)">
+                                <mat-option *ngFor="let product of filteredProducts | async" [value]="product">
+                                    {{ product.name }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <div class="alert alert-danger" *ngIf="autocompleteControl.invalid && ticketForm.submitted">
+                            La factura no puede estar vacia!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info my-4" *ngIf="ticket.items.length == 0">
+                    No hay lineas asignadas para la factura. Debe agregar al menos una!
+                </div>
+
+                <table class="table table-striped table-hover table-sm" *ngIf="ticket.items.length > 0">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of ticket.items">
+                            <td>{{ item.product.name }}</td>
+                            <td>${{ item.product.price }}</td>
+                            <td><input type="number" value="{{ item.quantity }}" class="form-control col-sm-4" (change)="updateQuantity(item.product.id, $event)"></td>
+                            <td>${{ item.calculateAmount() }}</td>
+                            <td><button class="btn btn-danger btn-sm" type="button" (click)="deleteTicketItem(item.product.id)">x</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 class="float-right" *ngIf="ticket.items.length > 0">Gran total: $<span class="badge badge-secondary">{{ ticket.calculateGrantTotal() }}</span></h3>
+
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <input type="submit" (click)="create(ticketForm)" value="Crear factura" class="btn btn-secondary">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>
